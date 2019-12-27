@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before-install:
+  - docker build -t lianglaw/dockercomplex -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true lianglaw/dockercomplex npm test -- --coverage
+
+after-success:
+  - docker build -t lianglaw/dockercomplex-client ./client
+  - docker build -t lianglaw/dockercomplex-nginx ./nginx
+  - docker build -t lianglaw/dockercomplex-server ./server
+  - docker build -t lianglaw/dockercomplex-worker ./worker
+  # Login to the docker CLI
+  - echo "$DOCKER_PW" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push lianglaw/dockercomplex-client
+  - docker push lianglaw/dockercomplex-nginx
+  - docker push lianglaw/dockercomplex-server
+  - docker push lianglaw/dockercomplex-worker

@@ -1,0 +1,16 @@
+FROM node:alpine
+
+# ENV CHOKIDAR_USEPOLLING=true
+# ENV REDIS_HOST=redis
+# ENV REDIS_PORT=6379
+# ENV PG_HOST=postgres
+# ENV PG_DATABASE=postgres
+# ENV PG_USER=liang
+# ENV PG_PASSWORD=abc123
+# ENV PG_PORT=5432
+
+WORKDIR "/app"
+COPY package*.json ./
+RUN npm install
+COPY ./ ./
+CMD ["npm", "run", "dev"]
